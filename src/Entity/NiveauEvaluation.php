@@ -11,6 +11,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ApiResource(
  *  
  *    routePrefix="/admin",
+ *    
  * 
  *    attributes={},
  * 
@@ -46,25 +47,25 @@ class NiveauEvaluation
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @groups({"compet_read"})
+     * @groups({"competence_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @groups({"compet_read"})
+     * @groups({"competence_write", "competence_read"})
      */
     private $libelle;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @groups({"compet_read"})
+     * @groups({"competence_write", "competence_read"})
      */
     private $critereEvaluation;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @groups({"compet_read"})
+     * @groups({"competence_write", "competence_read"})
      */
     private $groupeActions;
 
@@ -74,7 +75,7 @@ class NiveauEvaluation
     private $brief;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Competences::class, inversedBy="niveau")
+     * @ORM\ManyToOne(targetEntity=Competences::class, inversedBy="niveau",cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      */
     private $competences;

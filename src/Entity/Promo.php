@@ -5,12 +5,14 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\PromoRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
  * 
  *      routePrefix="/admin",
- * 
+ *      normalizationContext={"groups"={"promo_read"}},
+ *      denormalizationContext={"groups"={"promo_write"}},
  *      attributes= {},
  * 
  *      collectionOperations={
@@ -97,53 +99,69 @@ class Promo
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @groups({"promo_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @groups({"promo_read"})
      */
     private $langue;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @groups({"promo_read"})
      */
     private $titre;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @groups({"promo_read"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @groups({"promo_read"})
      */
     private $lieu;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @groups({"promo_read"})
      */
     private $referenceAgate;
 
     /**
      * @ORM\Column(type="datetime")
+     * @groups({"promo_read"})
      */
     private $dateDebut;
 
     /**
      * @ORM\Column(type="datetime")
+     * @groups({"promo_read"})
      */
     private $dateFinProvisoire;
 
     /**
      * @ORM\Column(type="datetime")
+     * @groups({"promo_read"})
      */
     private $dateFinReelle;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @groups({"promo_read"})
      */
     private $etat;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Referentiel::class, inversedBy="promos")
+     * @groups({"promo_read"})
+     */
+    private $referentiel;
 
     public function getId(): ?int
     {
@@ -254,6 +272,18 @@ class Promo
     public function setEtat(string $etat): self
     {
         $this->etat = $etat;
+
+        return $this;
+    }
+
+    public function getReferentiel(): ?Referentiel
+    {
+        return $this->referentiel;
+    }
+
+    public function setReferentiel(?Referentiel $referentiel): self
+    {
+        $this->referentiel = $referentiel;
 
         return $this;
     }

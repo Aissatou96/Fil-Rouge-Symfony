@@ -15,7 +15,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * 
  *    routePrefix="/admin",
  *    
- *    denormalizationContext={"groups"={"compet_read"}},
+ *    normalizationContext={"groups"={"competence_read"}},
+ *    denormalizationContext={"groups"={"competence_write"}},
  * 
  *    attributes={},
  * 
@@ -50,20 +51,20 @@ class Competences
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     * @groups({"grp_compet_read","compet_read"})
+     * @ORM\Column(type="integer")*
+     * @groups({"competence_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @groups({"grp_compet_read","compet_read"})
+     * @groups({"competence_write", "competence_read"})
      */
     private $libelle;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @groups({"grp_compet_read","compet_read"})
+     * @groups({"competence_write", "competence_read"})
      */
     private $description;
 
@@ -73,12 +74,14 @@ class Competences
     private $archivage = 0;
 
     /**
-     * @ORM\ManyToMany(targetEntity=GroupeCompetence::class, inversedBy="competences")
+     * @ORM\ManyToMany(targetEntity=GroupeCompetence::class, inversedBy="competences",cascade={"persist"})
+     * @groups({"competence_write", "competence_read"})
      */
     private $groupeCompetences;
 
     /**
-     * @ORM\OneToMany(targetEntity=NiveauEvaluation::class, mappedBy="competences")
+     * @ORM\OneToMany(targetEntity=NiveauEvaluation::class, mappedBy="competences",cascade={"persist"})
+     * @groups({"competence_write","competence_read"})
      */
     private $niveau;
 

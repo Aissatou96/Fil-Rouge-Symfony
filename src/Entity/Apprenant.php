@@ -20,7 +20,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *                 },
  *       collectionOperations={
  *                                "POST"={"path"="/apprenants"},
- *                                "GET"={"path"="/apprenants"}
+ *                                "GET"={"path"="/apprenants"},
+ *                                
  *                             },
  * 
  *      itemOperations={

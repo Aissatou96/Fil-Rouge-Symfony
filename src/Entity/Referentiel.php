@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\ReferentielRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ReferentielRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
@@ -14,7 +15,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * 
  *      routePrefix="/admin",
  * 
- *      attributes= {},
+ *      normalizationContext={"groups"={"ref_read"}},
+ *      denormalizationContext={"groups"={"ref_write"}},
  * 
  *      collectionOperations={
  *                              "addRef"={
@@ -33,6 +35,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *                                          },
  * 
  *                           },
+ *      
  *      itemOperations={
  *                        "oneRef"={
  *                                    "method"="GET",
@@ -41,7 +44,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *                          
  *                        "grpCompetRef"={
  *                                    "method"="GET",
- *                                    "path"="/referentiels/{id1}/grpecompetences/{id}"
+ *                                    "path"="/referentiels/{id1}/grpecompetences/{id}/competences"
  *                                  },
  * 
  *                        "majRef"={
@@ -49,6 +52,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *                                    "path"="/referentiels/{id}"
  *                                  }
  *                      }
+ *                              
  * )
  * @ORM\Entity(repositoryClass=ReferentielRepository::class)
  */
@@ -58,59 +62,69 @@ class Referentiel
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @groups({"grp_compet_read"})
+     * @groups({"ref_write","promo_read","ref_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @groups({"grp_compet_read"})
+     * @groups({"ref_write", "ref_read","promo_read", "ref_read"})
      */
     private $libelle;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @groups({"grp_compet_read"})
+     * @groups({"ref_write", "ref_read", "promo_read", "ref_read"})
      */
     private $presentation;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @groups({"grp_compet_read"})
+     * @groups({"ref_write","ref_read","promo_read"})
      */
     private $programme;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @groups({"grp_compet_read"})
+     * @groups({"ref_write","ref_read","promo_read"})
      */
     private $critereEvaluation;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @groups({"grp_compet_read"})
+     * @groups({"ref_write","ref_read"})
      */
     private $critereAdmission;
 
     /**
      * @ORM\Column(type="boolean")
+     * @groups({"ref_write"})
      */
     private $archivage = 0;
 
     /**
      * @ORM\OneToMany(targetEntity=Brief::class, mappedBy="referentiel")
+     * @groups({"ref_write", "ref_read"})
      */
     private $briefs;
 
     /**
      * @ORM\ManyToMany(targetEntity=GroupeCompetence::class, mappedBy="referentiel")
+     * @groups({"ref_write", "ref_read"})
+     * @ApiSubresource()
      */
     private $groupeCompetences;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Promo::class, mappedBy="referentiel")
+     */
+    private $promos;
 
     public function __construct()
     {
         $this->briefs = new ArrayCollection();
         $this->groupeCompetences = new ArrayCollection();
+        $this->promos = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -242,6 +256,36 @@ class Referentiel
     {
         if ($this->groupeCompetences->removeElement($groupeCompetence)) {
             $groupeCompetence->removeReferentiel($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Promo[]
+     */
+    public function getPromos(): Collection
+    {
+        return $this->promos;
+    }
+
+    public function addPromo(Promo $promo): self
+    {
+        if (!$this->promos->contains($promo)) {
+            $this->promos[] = $promo;
+            $promo->setReferentiel($this);
+        }
+
+        return $this;
+    }
+
+    public function removePromo(Promo $promo): self
+    {
+        if ($this->promos->removeElement($promo)) {
+            // set the owning side to null (unless already changed)
+            if ($promo->getReferentiel() === $this) {
+                $promo->setReferentiel(null);
+            }
         }
 
         return $this;

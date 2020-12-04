@@ -13,7 +13,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ApiResource(
  * 
  *    routePrefix="/admin",
- *    denormalizationContext={"groups"={"grp_compet_read"}},
+ *    normalizationContext={"groups"={"grp_competence_read"}},
+ *    denormalizationContext={"groups"={"grp_competence_write"}},
  * 
  *    collectionOperations={
  *                          "POST"={
@@ -58,19 +59,19 @@ class GroupeCompetence
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @groups({"grp_compet_read","compet_read"})
+     * @groups({"competence_read", "grp_competence_read", "ref_write", "ref_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @groups({"grp_compet_read","compet_read"})
+     * @groups({"competence_write", "competence_read", "grp_competence_write", "grp_competence_read","ref_write","ref_read"})
      */
     private $libelle;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @groups({"grp_compet_read","compet_read"})
+     * @groups({"competence_write", "competence_read", "grp_competence_write", "grp_competence_read", "ref_write","ref_read"})
      */
     private $description;
 

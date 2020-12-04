@@ -7,11 +7,14 @@ use App\Repository\GroupeTagRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
  * 
  *      routePrefix="/admin",
+ *      normalizationContext={"groups"={"grp_tag_read"}},
+ *      denormalizationContext={"groups"={"grp_tag_write"}},
  * 
  *      attributes= {},
  * 
@@ -33,11 +36,13 @@ class GroupeTag
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @groups({"tag_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @groups({"tag_read"})
      */
     private $libelle;
 

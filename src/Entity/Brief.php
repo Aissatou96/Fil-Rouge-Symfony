@@ -7,9 +7,65 @@ use App\Repository\BriefRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *      routePrefix="/formateur",
+ *      attributes={},
+ *      normalizationContext={"groups"={"brief_read"}},
+ *      denormalizationContext={"groups"={"brief_write"}},
+ *      collectionOperations={
+ *                              "listBriefs"={
+ *                                              "method"="GET",
+ *                                              "path"="/briefs"
+ *                                     },
+ * 
+ *                              "promoGrpBriefs"={
+ *                                                  "method"="GET",
+ *                                                  "path"="/promo/{id}/groupe/{id1}/briefs"
+ *                                                },
+ *                              "promoBriefs"={
+ *                                              "method"="GET",
+ *                                              "path"="/promo/{id}/briefs"
+ *                                             },
+ * 
+ *                              "briefBrouillons"={
+ *                                                    "method"="GET",
+ *                                                    "path"="/{id}/brief/brouillons"
+ *                                                 },
+ * 
+ *                              "briefValides"={
+ *                                                    "method"="GET",
+ *                                                    "path"="/{id}/briefs/valides"
+ *                                                 },
+ *                               "Briefs"={
+ *                                              "method"="POST",
+ *                                              "path"="/briefs"
+ *                                     },
+ * 
+ *                                "addBrief"={
+ *                                              "method"="POST",
+ *                                              "path"="/briefs/{id}"
+ *                                     },
+ * 
+ *                                 "addBriefPromo"={
+ *                                              "method"="POST",
+ *                                              "path"="/promo/{id}/briefs/{id1}"
+ *                                     }
+ *                           },
+ *      itemOperations={
+ *                      "briefAssign"={
+ *                                       "method"="GET",
+ *                                       "path"="/promo/{id}/brief/{id1}/assignation"
+ *                                     },
+ *                      
+ *                       "getBriefPromo"={
+ *                                       "method"="PUT",
+ *                                       "path"="/promo/{id}/brief/{id1}"
+ *                                     }
+ *                      }
+ * )
  * @ORM\Entity(repositoryClass=BriefRepository::class)
  */
 class Brief
@@ -18,26 +74,31 @@ class Brief
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @groups({"ref_write", "brief_read","ref_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @groups({"ref_write", "brief_read","ref_read"})
      */
     private $langue;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @groups({"ref_write","ref_read"})
      */
     private $titre;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @groups({"ref_write","ref_read"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @groups({"ref_write"})
      */
     private $contexte;
 

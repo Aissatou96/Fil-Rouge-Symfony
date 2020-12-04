@@ -7,7 +7,14 @@ use App\Repository\LivrablesPartielsRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *      routePrefix="/admin",
+ *      attributes={},
+ *      normalizationContext={"groups"={"_read"}},
+ *      denormalizationContext={"groups"={"_write"}},
+ *      collectionOperations={},
+ *      itemOperations={}
+ * )
  * @ORM\Entity(repositoryClass=LivrablesPartielsRepository::class)
  */
 class LivrablesPartiels

@@ -2,11 +2,37 @@
 
 namespace App\Entity;
 
-use App\Repository\GroupeRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\GroupeRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ORM\Entity(repositoryClass=GroupeRepository::class)
+ * @ApiResource(
+ *      routePrefix="/admin",
+ *      attributes={},
+ *      normalizationContext={"groups"={"grp_read"}},
+ *      denormalizationContext={"groups"={"grp_write"}},
+ *      collectionOperations={
+ *                              "listGroupes"={
+ *                                              "method"="GET",
+ *                                              "path"="/groupes"
+ *                                            },
+ * 
+ *                              "grpAprenants"={
+ *                                                "method"="GET",
+ *                                                "path"="/groupe/{id}/apprenants"
+ *                                              },
+ *                              "addGrp"={
+ *                                          "method"="POST",
+ *                                          "path"="/groupes"
+ *                                        },
+ *                         
+ *                          },
+ *      itemOperations={
+ *                          
+ *                      }
+ * )
  */
 class Groupe
 {

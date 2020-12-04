@@ -2,42 +2,40 @@
 
 namespace App\DataFixtures;
 
+use Faker\Factory;
 use App\Entity\GroupeCompetence;
-use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-class GroupeCompetencesFixtures extends Fixture
+class GroupeCompetencesFixtures extends Fixture implements DependentFixtureInterface
 {
-    public const GRPMAQU_REFERENCE = 'Maquettage';
-    public const DESCGRPMAQU_REFERENCE = 'Description maquette';
-    public const DEV_REFERENCE = 'Développement Web';
-    public const DESCDEV_REFERENCE = 'Description développement web';
-    public const DESIGN_REFERENCE = 'Design Web';
-    public const DESCDESIGN_REFERENCE = 'Description design web';
-    public function load(ObjectManager $manager)
-    { 
-        $maq = new GroupeCompetence() ;
-        $maq->setLibelle(self::GRPMAQU_REFERENCE);
-        $maq->setDescription(self::DESCGRPMAQU_REFERENCE);
-        $manager->persist($maq);
-        $this->addReference(self::DESCGRPMAQU_REFERENCE,$maq);
-        $this->addReference(self::GRPMAQU_REFERENCE,$maq);
+    public function load(ObjectManager $manager){
+        $faker = Factory::create('fr_FR');
+        for ($i=0; $i < 3; $i++) { 
+            $grpComp = new GroupeCompetence();
+            $grpComp->setLibelle('GroupeCompet'.$i)
+                    ->setDescription($faker->realText(25));
 
-        $dev = new GroupeCompetence() ;
-        $dev->setLibelle(self::DEV_REFERENCE);
-        $dev->setDescription(self::DESCDEV_REFERENCE);
-        $manager->persist($dev);
-        $this->addReference(self::DEV_REFERENCE,$dev);
-        $this->addReference(self::DESCDEV_REFERENCE,$dev);
-
-        $des = new GroupeCompetence() ;
-        $des->setLibelle(self::DESIGN_REFERENCE);
-        $des->setDescription(self::DESCDESIGN_REFERENCE);
-        $manager->persist($des);
-        $this->addReference(self::DESIGN_REFERENCE,$des);
-        $this->addReference(self::DESCDESIGN_REFERENCE,$des);
-
+            $nbrComp=$faker->randomElement([1,2,3]);
+            for($j = 0; $j < $nbrComp; $j++)
+            {
+                $key=$faker->unique(true)->numberBetween(0,2);
+            
+                $grpComp->addCompetence($this->getReference(CompetencesFixtures::COMPETENCE.$key));
+            }
+            
+            $manager->persist($grpComp);
+        }
         $manager->flush();
+
+    }
+   
+    public function getDependencies()
+    {
+        return[
+            CompetencesFixtures::class
+        ];
     }
 
 }

@@ -6,13 +6,14 @@ use Faker\Factory;
 use App\Entity\Promo;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-class PromoFixtures extends Fixture
+class PromoFixtures extends Fixture implements DependentFixtureInterface
 {
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager) 
     {
        $faker = Factory::create('fr_FR');
-       for ($i=0; $i < 5; $i++) { 
+       for ($i=0; $i < 3; $i++) { 
            $promo = new Promo();
            $promo->setLangue('Français')
                  ->setTitre($faker->realText(25))
@@ -22,13 +23,20 @@ class PromoFixtures extends Fixture
                  ->setDateDebut($faker->dateTime('2020-02-17 08:00:00', 'UTC'))
                  ->setDateFinProvisoire($faker->dateTime('2021-04-30 08:00:00', 'UTC'))
                  ->setDateFinReelle($faker->dateTime('2020-06-31 08:00:00', 'UTC'))
-                 ->setEtat($faker->randomElement(['En cours', 'Fermé']));
+                 ->setEtat($faker->randomElement(['En cours', 'Fermé']))
+                 ->setReferentiel($this->getReference(ReferentielFixtures::REF.$i));
             $manager->persist($promo);
-
-
-
            
        }
         $manager->flush();
     }
-}
+        
+
+        public function getDependencies()
+        {
+            return[
+                ReferentielFixtures::class
+            ];
+        }
+    }
+
