@@ -10,6 +10,7 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 class PromoFixtures extends Fixture implements DependentFixtureInterface
 {
+    public const PROMO_REF = 'Promo';
     public function load(ObjectManager $manager) 
     {
        $faker = Factory::create('fr_FR');
@@ -24,8 +25,9 @@ class PromoFixtures extends Fixture implements DependentFixtureInterface
                  ->setDateFinProvisoire($faker->dateTime('2021-04-30 08:00:00', 'UTC'))
                  ->setDateFinReelle($faker->dateTime('2020-06-31 08:00:00', 'UTC'))
                  ->setEtat($faker->randomElement(['En cours', 'Fermé']))
-                 ->setReferentiel($this->getReference(ReferentielFixtures::REF.$i));
+                 ->setReferentiel($this->getReference(ReferentielFixtures::REF.$i));       
             $manager->persist($promo);
+            $this->addReference(self::PROMO_REF.$i,$promo);
            
        }
         $manager->flush();

@@ -104,6 +104,7 @@ class User implements UserInterface
     /**
      * @ORM\ManyToOne(targetEntity=Profil::class, inversedBy="users")
      * @ORM\JoinColumn(nullable=false)
+     * @groups({"grp_read"})
      */
     protected $profil;
 
