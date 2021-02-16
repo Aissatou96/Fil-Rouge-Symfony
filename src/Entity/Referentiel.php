@@ -36,19 +36,24 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * 
  *                           },
  *      
- *      itemOperations={
- *                        "oneRef"={
+ *      itemOperations = {
+ *                        "oneRef"= {
  *                                    "method"="GET",
  *                                    "path"="/referentiels/{id}"
  *                                  },
  *                          
- *                        "grpCompetRef"={
- *                                    "method"="GET",
- *                                    "path"="/referentiels/{id1}/grpecompetences/{id}/competences"
- *                                  },
+ *                        "grpCompetRef" = {
+ *                                           "method"="GET",
+ *                                           "path"="/referentiels/{id1}/grpecompetences/{id}/competences"
+ *                                         },
  * 
- *                        "majRef"={
+ *                        "majRef" = {
  *                                    "method"="PUT",
+ *                                    "path"="/referentiels/{id}"
+ *                                  },
+ *                          
+ *                        "delRef" = {
+ *                                    "method"="DELETE",
  *                                    "path"="/referentiels/{id}"
  *                                  }
  *                      }
@@ -104,13 +109,13 @@ class Referentiel
 
     /**
      * @ORM\OneToMany(targetEntity=Brief::class, mappedBy="referentiel")
-     * @groups({"ref_write", "ref_read"})
+     * @groups({"ref_write"})
      */
     private $briefs;
 
     /**
      * @ORM\ManyToMany(targetEntity=GroupeCompetence::class, mappedBy="referentiel")
-     * @groups({"ref_write", "ref_read"})
+     * @groups({"ref_write","ref_read"})
      * @ApiSubresource()
      */
     private $groupeCompetences;

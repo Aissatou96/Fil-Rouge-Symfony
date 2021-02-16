@@ -20,7 +20,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *                },
  * 
  *     collectionOperations={
- *                            "POST"={"path"="/profils"},
+ *                            "POST"={
+ *                                      "path"="/profils",
+ *                                      "denormalization_context"={"profil_write"}
+ *                                   },
  * 
  *                            "GET"={
  *                                      "path"="/profils",
@@ -52,18 +55,19 @@ class Profil
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     *  @Groups({"profil_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"profil_read", "profil_detail_read"})
+     * @Groups({"profil_read", "profil_detail_read", "user_read","profil_write"})
+    
      */
     private $libelle;
 
     /**
      * @ORM\OneToMany(targetEntity=User::class, mappedBy="profil")
-     * @Groups({"profil_users_read"})
      */
     private $users;
 

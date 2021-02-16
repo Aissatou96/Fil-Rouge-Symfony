@@ -13,7 +13,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ApiResource(
  * 
  *    routePrefix="/admin",
- *    normalizationContext={"groups"={"grp_competence_read"}},
+ *    
  *    denormalizationContext={"groups"={"grp_competence_write"}},
  * 
  *    collectionOperations={
@@ -22,7 +22,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *                                 },
  * 
  *                          "GET"={
- *                                     "path"="/groupe_competences"
+ *                                     "path"="/groupe_competences",
+ *                                     "normalization_context"={"groups"={"grpC_read"}}
  *                                },
  * 
  *                          "competGrpComp"= {
@@ -59,19 +60,19 @@ class GroupeCompetence
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @groups({"competence_read", "grp_competence_read", "ref_write", "ref_read"})
+     * @groups({"competence_read", "grpC_read", "ref_write", "ref_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @groups({"competence_write", "competence_read", "grp_competence_write", "grp_competence_read","ref_write","ref_read"})
+     * @groups({"competence_write", "competence_read", "grp_competence_write", "grpC_read","ref_write","ref_read"})
      */
     private $libelle;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @groups({"competence_write", "competence_read", "grp_competence_write", "grp_competence_read", "ref_write","ref_read"})
+     * @groups({"competence_write", "competence_read", "grp_competence_write", "grpC_read", "ref_write","ref_read"})
      */
     private $description;
 

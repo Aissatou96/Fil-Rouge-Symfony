@@ -1,27 +1,26 @@
 <?php
-// src/DataPersister/ProfilDataPersister.php
+// src/DataPersister/UserDataPersister.php
 
 namespace App\DataPersister;
 
-use App\Entity\Profil;
+use App\Entity\ProfilDeSortie;
 use Doctrine\ORM\EntityManagerInterface;
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
-use App\Repository\UserRepository;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  *
  */
-class ProfilDataPersister implements ContextAwareDataPersisterInterface
+class ProfilSortieDataPersister implements ContextAwareDataPersisterInterface
 {
-    private $_entityManager;
-    private $userRepository;
+    
+
     public function __construct(
         EntityManagerInterface $entityManager,
-        UserRepository $userRepository
+        UserPasswordEncoderInterface $passwordEncoder
     ) {
         $this->_entityManager = $entityManager;
-        $this->userRepository = $userRepository;
-      
+        $this->_passwordEncoder = $passwordEncoder;
     }
 
     /**
@@ -29,16 +28,14 @@ class ProfilDataPersister implements ContextAwareDataPersisterInterface
      */
     public function supports($data, array $context = []): bool
     {
-        return $data instanceof Profil;
+        return $data instanceof ProfilDeSortie;
     }
 
     /**
-     * @param Profil $data
+     * @param User $data
      */
     public function persist($data, array $context = [])
     {
-        
-
         $this->_entityManager->persist($data);
         $this->_entityManager->flush();
     }
@@ -48,12 +45,7 @@ class ProfilDataPersister implements ContextAwareDataPersisterInterface
      */
     public function remove($data, array $context = [])
     {
-        $id = $data->getId();
         $data->setArchive(1);
-        $users = $this->userRepository->findBy(['profil'=>$id]);
-        foreach ($users as $key => $user) {
-            $user->setArchive(1);
-        }
         $this->_entityManager->flush();
     }
 }

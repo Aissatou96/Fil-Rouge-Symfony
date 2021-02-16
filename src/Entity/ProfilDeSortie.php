@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ProfilDeSortieRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ProfilDeSortieRepository::class)
@@ -34,7 +35,8 @@ use App\Repository\ProfilDeSortieRepository;
  *                            },
  * 
  *                      "PUT"={
- *                              "path"="/profils_sortie/{id}"
+ *                              "path"="/profils_sortie/{id}",
+ *                              "denormalization_context"={"groups":"profilSortie:write"}
  *                            },
  * 
  *                      "DELETE"={
@@ -54,8 +56,15 @@ class ProfilDeSortie
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"groups":"profilSortie:write"})
      */
     private $libelle;
+
+    /**
+     * @ORM\Column(type="boolean")
+     * @Groups({"groups":"profilSortie:write"})
+     */
+    private $archive;
 
     public function getId(): ?int
     {
@@ -70,6 +79,18 @@ class ProfilDeSortie
     public function setLibelle(string $libelle): self
     {
         $this->libelle = $libelle;
+
+        return $this;
+    }
+
+    public function getArchive(): ?bool
+    {
+        return $this->archive;
+    }
+
+    public function setArchive(bool $archive): self
+    {
+        $this->archive = $archive;
 
         return $this;
     }

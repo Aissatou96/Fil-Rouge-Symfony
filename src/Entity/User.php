@@ -15,7 +15,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\DiscriminatorMap({"USER" = "User","ADMIN" = "Admin", "APPRENANT" = "Apprenant", "FORMATEUR" = "Formateur", "CM" = "Cm"})
  * @ApiResource(
  *       routePrefix="/admin",
- * 
+ *
  *       attributes={
  *                     
  *                      "security"="is_granted('ROLE_ADMIN')",
@@ -27,7 +27,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * 
  *                              "POST"={
  *                                       "path"="/users",
- *                                       "denormalization_context"={}
+ *                                        "deserialize"=false
  *                                     },
  * 
  *                              "GET"={
@@ -47,8 +47,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *                      "DELETE"={
  *                                  "path"="/users/{id}"},
  * 
- *                      "PUT"={
- *                              "path"="/users/{id}"}
+ *                      "putUser"={
+ *                                 "path"="/users/{id}",
+ *                                  "route_name":"putusers",
+ *                                  "deserialize"=false
+ *                              }
  *                  }
  * )
  */
@@ -59,10 +62,12 @@ class User implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Groups({"profil_users_read"})
+     * @Groups({"user_read"})
      */
     protected $id;
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Groups({"user_read", "user_details_read"})
      */
     protected $username;
 
@@ -71,6 +76,7 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+    
      */
     protected $password;
 
@@ -88,23 +94,26 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user_read", "user_details_read"})
      */
     protected $email;
 
     /**
      * @ORM\Column(type="blob")
+     * @Groups({"user_read", "user_details_read"})
      */
     protected $avatar;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user_read"})
      */
     protected $statut;
 
     /**
      * @ORM\ManyToOne(targetEntity=Profil::class, inversedBy="users")
      * @ORM\JoinColumn(nullable=false)
-     * @groups({"grp_read"})
+     * @groups({"grp_read", "user_read","user_details_read"})
      */
     protected $profil;
 
@@ -227,7 +236,12 @@ class User implements UserInterface
 
     public function getAvatar()
     {
-        return $this->avatar;
+        if($this->avatar != null){
+            return base64_encode(stream_get_contents($this->avatar));
+        }else{
+            return $this->avatar;
+        }
+        
     }
 
     public function setAvatar($avatar): self

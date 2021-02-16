@@ -37,7 +37,7 @@ class CompetencesController extends AbstractController
         }
         $em->persist($competence);
         $em->flush();
-        return $this->json($competence,Response::HTTP_CREATED);
+        return $this->json(['message'=> 'Compétence créée avec succès!'], Response::HTTP_CREATED);
     }
     
 
