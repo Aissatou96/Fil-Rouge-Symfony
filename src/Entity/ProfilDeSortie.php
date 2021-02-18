@@ -15,8 +15,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * 
  * attributes={
  *              "security"="is_granted('ROLE_ADMIN')",
- *              "security_message"="Accès non autorisé",
- *              "pagination_items_per_page"=5,
+ *              "security_message"="Accès non autorisé"
  *             },
  * 
  *  collectionOperations={
@@ -64,7 +63,7 @@ class ProfilDeSortie
      * @ORM\Column(type="boolean")
      * @Groups({"groups":"profilSortie:write"})
      */
-    private $archive;
+    private $archive=0;
 
     public function getId(): ?int
     {

@@ -55,7 +55,7 @@ class Profil
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     *  @Groups({"profil_read"})
+     *  @Groups({"profil_read", "profil_detail_read"})
      */
     private $id;
 
@@ -68,6 +68,8 @@ class Profil
 
     /**
      * @ORM\OneToMany(targetEntity=User::class, mappedBy="profil")
+     * @Groups({"profil_detail_read"})
+     * 
      */
     private $users;
 

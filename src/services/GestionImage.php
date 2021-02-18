@@ -47,6 +47,7 @@ class GestionImage
      */
     public function GestionImage(Request $request, string $fileName = null): array
     {
+       // dd($request->headers->get("content-type"));
         $raw = $request->getContent();
         //dd($request->headers->get("content-type"));
         $delimiteur = "multipart/form-data; boundary=";

@@ -7,6 +7,8 @@ use App\Repository\UserRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -54,6 +56,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *                              }
  *                  }
  * )
+ * @ApiFilter(SearchFilter::class, properties={"archive":"exact"})
  */
 class User implements UserInterface
 {
@@ -62,7 +65,7 @@ class User implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Groups({"profil_users_read"})
-     * @Groups({"user_read"})
+     * @Groups({"user_read", "profil_detail_read"})
      */
     protected $id;
     /**
@@ -82,19 +85,19 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"user_read","user_details_read","profil_users_read"})
+     * @Groups({"user_read","user_details_read","profil_users_read", "profil_detail_read"})
      */
     protected $prenom;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"user_read","user_details_read","profil_users_read"})
+     * @Groups({"user_read","user_details_read","profil_users_read", "profil_detail_read"})
      */
     protected $nom;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"user_read", "user_details_read"})
+     * @Groups({"user_read", "user_details_read", "profil_detail_read"})
      */
     protected $email;
 
@@ -119,6 +122,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="boolean")
+     * @groups({"user_read"})
      */
     private $archive = 0;
 

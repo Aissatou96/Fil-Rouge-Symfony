@@ -75,7 +75,7 @@ class UserController extends AbstractController
      * @Route(
      *     name="putusers",
      *     path="/api/admin/users/{id}",
-     *     methods={"POST"},
+     *     methods={"PUT"},
      *     defaults={
      *         "_api_resource_class" = User::class,
      *         "_api_item_operation_name"="putusers"
@@ -83,8 +83,9 @@ class UserController extends AbstractController
      * )
      */
     public function UpdateUser(GestionImage $gestionImage, Request $request, $id, UserRepository $userRepository, UserPasswordEncoderInterface $encoder, EntityManagerInterface $em, ProfilRepository $profilRepository){
+       
        $userUpdate = $gestionImage->GestionImage($request,'avatar');
-       dd($userUpdate);
+       //dd($userUpdate);
        $utilisateur = $userRepository->find($id);
        foreach ($userUpdate as $key => $value) {
          $setteur = 'set'.ucfirst(strtolower($key));
@@ -103,8 +104,8 @@ class UserController extends AbstractController
        $em->persist($utilisateur);
        $em->flush();
 
-       dd($utilisateur);
-
+       
+       return  $this->json(['message'=> 'Utilisateur créé avec succès!'], Response::HTTP_CREATED);
 
       
     }
