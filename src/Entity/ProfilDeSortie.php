@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ProfilDeSortieRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
  * @ORM\Entity(repositoryClass=ProfilDeSortieRepository::class)
@@ -43,6 +45,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *                               }
  *      }
  * )
+ * @ApiFilter(SearchFilter::class, properties={"archive":"exact"})
  */
 class ProfilDeSortie
 {
